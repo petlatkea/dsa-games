@@ -1,0 +1,31 @@
+body {
+  background-color: #444;
+  color: #8d8;
+}
+
+div#board {
+  display: grid;
+  grid-template-columns: repeat(var(--WIDTH), 32px);
+  --border-color: #aaa;
+}
+
+.field {
+  border-left: 1px dotted var(--border-color);
+  border-top: 1px dotted var(--border-color);
+  width: 32px;
+  height: 32px;
+}
+.lastx {
+  border-right: 1px dotted var(--border-color);
+}
+.lasty {
+  border-bottom: 1px dotted var(--border-color);
+}
+
+.snake {
+  background-color: #11a411;
+}
+
+.apple {
+  background-color: #b71111;
+}
