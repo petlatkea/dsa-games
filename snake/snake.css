@@ -40,6 +40,11 @@ main {
   list-style-type: disclosure-closed;
 }
 
+#info #queue {
+  max-height: 16em;
+  overflow: hidden;
+}
+
 form#settings {
   display: grid;
   grid-template-columns: min-content max-content;
