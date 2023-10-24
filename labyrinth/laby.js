@@ -20,6 +20,11 @@ function start() {
 
   markStartAndEnd();
 
+  // set visibility from localStorage
+  const visibility = localStorage.getItem("visible") == "true";
+  setBoardVibility(visibility);
+  document.querySelector("form#settings").visible.checked = visibility;
+
   // start loop
   completed = false;
   loop();
@@ -169,11 +174,17 @@ function registerEventsForSettings() {
 
 function toggleBoardVisibility(event) {
   const visible = event.target.checked;
+  setBoardVibility(visible);
+}
+
+function setBoardVibility(visible) {
   if (visible) {
     document.querySelector("#board").classList.remove("hide");
   } else {
     document.querySelector("#board").classList.add("hide");
   }
+  // store visibility in localStorage
+  localStorage.setItem("visible", visible);
 }
 
 function changeSpeed(event) {
