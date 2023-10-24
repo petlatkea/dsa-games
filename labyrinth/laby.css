@@ -13,7 +13,6 @@ main {
   grid-template-columns: repeat(var(--WIDTH), 32px);
   grid-auto-rows: 32px;
   --border-color: #aaa;
-  border: 2px solid var(--border-color);
 }
 
 .hide {
@@ -61,6 +60,13 @@ form#settings input {
   max-width: 3em;
   background-color: #444;
   color: rgb(99, 168, 99);
+}
+
+form#settings button {
+  padding: 8px;
+  background-color: #444;
+  color: inherit;
+  font-family: inherit;
 }
 
 form#settings input[type="checkbox"]:not(:checked) {

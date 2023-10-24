@@ -16,7 +16,7 @@ function start() {
   //  document.addEventListener("keydown", keypress);
   //  document.addEventListener("keyup", keyrelease);
 
-  //  registerEventsForSettings();
+  registerEventsForSettings();
 
   markStartAndEnd();
 
@@ -157,6 +157,56 @@ function getAccessibleNeighbours(node) {
 
 // *** SETTINGS ***
 
+function registerEventsForSettings() {
+  const form = document.querySelector("form#settings");
+
+  form.visible.addEventListener("click", toggleBoardVisibility);
+  form.speed.addEventListener("click", changeSpeed);
+  form.restart.addEventListener("click", restartSolution);
+  // set initial speed to form
+  speed = form.speed.valueAsNumber;
+}
+
+function toggleBoardVisibility(event) {
+  const visible = event.target.checked;
+  if (visible) {
+    document.querySelector("#board").classList.remove("hide");
+  } else {
+    document.querySelector("#board").classList.add("hide");
+  }
+}
+
+function changeSpeed(event) {
+  speed = event.target.valueAsNumber;
+}
+
+function restartSolution(event) {
+  event.preventDefault();
+  console.log("restart");
+
+  // remove all classes of visitedNodes
+  visitedNodes.forEach(node => {
+    unmarkNode(node, "visiting");
+    unmarkNode(node, "visited");
+    unmarkNode(node, "dead-end");
+  });
+
+  // clear path and list of visited
+  visitedNodes.splice(0, visitedNodes.length);
+  path.splice(0, path.length);
+  // forget about current and last
+  lastNode = null;
+  currentNode = null;
+  // set mode to forward
+  mode = "forward";
+
+  // make sure we are running
+  if (completed) {
+    completed = false;
+    requestAnimationFrame(loop);
+  }
+}
+
 // *** INFO ***
 
 function showStack() {
@@ -167,7 +217,8 @@ function showStack() {
 }
 
 function showTarget() {
-  document.querySelector("#target").textContent = `{ ${String(mazeGoal.x).padStart(2," ")}, ${String(mazeGoal.y).padStart(2," ")} }`
+  document.querySelector("#target").textContent = `{ ${String(mazeGoal.x).padStart(2, " ")}, ${String(mazeGoal.y).padStart(2, " ")} }${completed?" - reached!":""}`;
+  
 }
 
 // *** MAZE ***
