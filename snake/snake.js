@@ -13,6 +13,8 @@ function start() {
   document.addEventListener("keydown", keypress);
   document.addEventListener("keyup", keyrelease);
 
+  registerEventsForSettings();
+
   //  plot(40,40,"snake");
   drawSnake();
   // start loop
@@ -161,6 +163,31 @@ const move = {
     offset: 0,
   },
 };
+
+// *** SETTINGS ***
+
+function registerEventsForSettings() {
+  const form = document.querySelector("form#settings");
+
+  form.visible.addEventListener("click", toggleBoardVisibility);
+  form.speed.addEventListener("click", changeSpeed);
+
+}
+
+function toggleBoardVisibility(event) {
+  const visible = event.target.checked;
+  if(visible) {
+    document.querySelector("#board").classList.remove("hide");
+  } else {
+    document.querySelector("#board").classList.add("hide");
+  }
+}
+
+function changeSpeed(event) {
+  const _speed = event.target.valueAsNumber;
+  speed = _speed;
+}
+
 
 // *** INFO ***
 
