@@ -3,10 +3,34 @@ body {
   color: #8d8;
 }
 
-div#board {
+main {
+  display: flex;
+  gap: 1em;
+}
+
+#board {
   display: grid;
   grid-template-columns: repeat(var(--WIDTH), 32px);
   --border-color: #aaa;
+}
+
+#info {
+  border: 1px solid #aaa;
+  width: 100%;
+  padding: 1.5em;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#info h2 {
+  margin: 0;
+}
+
+#info li {
+  white-space: pre;
+}
+
+#info ul:has(#target) {
+  list-style-type: disclosure-closed;
 }
 
 .field {

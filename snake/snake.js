@@ -133,6 +133,8 @@ function loop() {
   function doMove() {
     moveSnake(move.direction.x, move.direction.y);
     drawSnake();
+    showQueue();
+    showTarget();
   }
   if (!dead) {
     requestAnimationFrame(loop);
@@ -159,6 +161,25 @@ const move = {
     offset: 0,
   },
 };
+
+// *** INFO ***
+
+function showQueue() {
+  const ul = document.querySelector("#queue");
+  const html = snake.map(item => `<li>{ ${String(item.x).padStart(2," ")}, ${String(item.y).padStart(2," ")} }</li>\n`).join("");
+  
+  ul.innerHTML = html;
+
+  document.querySelector("#queuelength").textContent = snake.length;
+}
+
+function showTarget() {
+  if(apple.visible) {
+    document.querySelector("#target").textContent = `{ ${String(apple.x).padStart(2," ")}, ${String(apple.y).padStart(2," ")} }`;
+  } else {
+    document.querySelector("#target").textContent = `- unknown -`;
+  }
+}
 
 // *** SNAKE ***
 
