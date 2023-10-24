@@ -93,6 +93,25 @@ form#settings input[type=checkbox]:not(:checked) {
   border-bottom: 1px dotted var(--border-color);
 }
 */
+
+.start {
+  background-color: #1111a4;
+}
+
+.end {
+  background-color: #a47111;
+}
+
+
+.visited {
+  background-color: #109010;
+}
+
+.visiting {
+  background-color: #b7c916;
+}
+
+
 .snake {
   background-color: #11a411;
 }

@@ -13,19 +13,19 @@ function start() {
   displayNodes();
 
   // register key-presses
-  document.addEventListener("keydown", keypress);
-  document.addEventListener("keyup", keyrelease);
+  //  document.addEventListener("keydown", keypress);
+  //  document.addEventListener("keyup", keyrelease);
 
-  registerEventsForSettings();
+  //  registerEventsForSettings();
 
+  markStartAndEnd();
 
   // start loop
   completed = false;
-  //  loop();
+  loop();
 }
 
 // *** KEYBOARD HANDLING ***
-
 
 // *** GAMELOOP ***
 
@@ -38,9 +38,12 @@ function loop() {
   const delta = (now - (last || now)) / 1000;
   last = now;
 
-  const lastDirection = move.direction;
+  timer += delta * speed;
+  if (timer >= 1) {
+    timer = 0;
+    makeMove();
+  }
 
- 
   if (!completed) {
     requestAnimationFrame(loop);
   }
@@ -48,15 +51,79 @@ function loop() {
 
 // *** MOVEMENT ***
 
+let speed = 4;
+let timer = 0;
 
+// *** SOLVER ***
+
+const visitedNodes = [];
+
+let lastNode = null;
+let currentNode = null;
+
+function makeMove() {
+  // if no currentNode - find the first
+  if (!currentNode) {
+    currentNode = nodes[0];
+  }
+
+  visitNode(currentNode);
+
+  const next = nextNode(currentNode);
+
+  // if next node, remember to move to that one, next time
+  if (next) {
+    currentNode = next;
+  } else {
+    // TODO: Backtrack if no next node available.
+  }
+}
+
+function visitNode(node) {
+  if (lastNode) {
+    unmarkNode(lastNode, "visiting");
+  }
+  lastNode = node;
+  markNode(node, "visited");
+  markNode(node, "visiting");
+
+  visitedNodes.push(node);
+}
+
+function nextNode(node) {
+  // find possible next candidate
+  let neighbours = getAccessibleNeighbours(node);
+
+  // eliminate those that have been visited
+  neighbours = neighbours.filter(node => !visitedNodes.includes(node));
+
+  // always return the first one (keeps the order n-e-s-w) - or undefined
+  // TODO: Maybe add a bit of intelligence if the end is within sight ...
+  return neighbours[0];
+}
+
+function getAccessibleNeighbours(node) {
+  const neighbours = [];
+  // if we can move in a direction, that node is a neighbour
+  if (node.north) {
+    neighbours.push(getNode(node.x, node.y - 1));
+  }
+  if (node.east) {
+    neighbours.push(getNode(node.x + 1, node.y));
+  }
+  if (node.south) {
+    neighbours.push(getNode(node.x, node.y + 1));
+  }
+  if (node.west) {
+    neighbours.push(getNode(node.x - 1, node.y));
+  }
+
+  return neighbours;
+}
 
 // *** SETTINGS ***
 
-
-
 // *** INFO ***
-
-
 
 // *** MAZE ***
 
@@ -79,6 +146,10 @@ function createNodes() {
   }
 }
 
+function getNode(x, y) {
+  return nodes[y * BOARD_WIDTH + x];
+}
+
 function getNeighbours(node) {
   let neighbours = [];
   // find neighbours (border-cells have fewer than others)
@@ -91,12 +162,10 @@ function getNeighbours(node) {
 }
 
 function createMaze() {
-  let current = nodes[0];
-
-  visitNode(current);
+  createMazeNode(nodes[0]);
 }
 
-function visitNode(current) {
+function createMazeNode(current) {
   current.visited = true;
 
   let x = current.x;
@@ -127,7 +196,7 @@ function visitNode(current) {
       neighbour.north = true;
     }
     // visit that neighbour, and so on and on ...
-    visitNode(neighbour);
+    createMazeNode(neighbour);
 
     // find any remaining unvisited neighbours, and loop
     neighbours = neighbours.filter(node => !node.visited);
@@ -151,7 +220,20 @@ function displayNodes() {
   }
 }
 
+function markStartAndEnd() {
+  plot(0, 0, "start");
+  plot(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, "end");
+}
+
 // *** GRAPHICS ***
+
+function markNode(node, type) {
+  plot(node.x, node.y, type);
+}
+
+function unmarkNode(node, type) {
+  unplot(node.x, node.y, type);
+}
 
 function plot(x, y, type) {
   const board = document.querySelector("#board");
