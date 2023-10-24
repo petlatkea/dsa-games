@@ -104,18 +104,21 @@ form#settings input[type=checkbox]:not(:checked) {
 
 
 .visited {
-  background-color: #109010;
+  background-color: #488a48;
 }
 
 .visiting {
-  background-color: #b7c916;
+  background-color: #f1fc91;
 }
 
+.dead-end {
+  background-color: #663636;
+}
 
 .snake {
   background-color: #11a411;
 }
 
 .apple {
-  background-color: #b71111;
+  
 }

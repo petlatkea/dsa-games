@@ -51,12 +51,15 @@ function loop() {
 
 // *** MOVEMENT ***
 
-let speed = 4;
+let speed = 6;
 let timer = 0;
 
 // *** SOLVER ***
 
 const visitedNodes = [];
+const path = [];
+
+let mode = "forward";
 
 let lastNode = null;
 let currentNode = null;
@@ -67,15 +70,41 @@ function makeMove() {
     currentNode = nodes[0];
   }
 
-  visitNode(currentNode);
+  if (mode === "forward") {
+    visitNode(currentNode);
 
-  const next = nextNode(currentNode);
-
-  // if next node, remember to move to that one, next time
-  if (next) {
-    currentNode = next;
+    // check if we've reached the end
+    if (currentNode === nodes[nodes.length - 1]) {
+      console.log("The end is found");
+      completed = true;
+    } else {
+      const next = nextNode(currentNode);
+      if (next) {
+        currentNode = next;
+      } else {
+        // Backtrack if no next node available.
+        mode = "backward";
+      }
+    }
   } else {
-    // TODO: Backtrack if no next node available.
+    backtrack();
+  }
+}
+
+function backtrack() {
+  // unmark last node
+  unmarkNode(lastNode, "visiting");
+  markNode(lastNode, "dead-end");
+
+  currentNode = path.pop();
+  markNode(currentNode, "visiting");
+
+  lastNode = currentNode;
+
+  // if there are unvisited paths from here - go that way
+  const next = nextNode(currentNode);
+  if (next) {
+    mode = "forward";
   }
 }
 
@@ -88,6 +117,7 @@ function visitNode(node) {
   markNode(node, "visiting");
 
   visitedNodes.push(node);
+  path.push(node);
 }
 
 function nextNode(node) {
@@ -97,7 +127,7 @@ function nextNode(node) {
   // eliminate those that have been visited
   neighbours = neighbours.filter(node => !visitedNodes.includes(node));
 
-  // always return the first one (keeps the order n-e-s-w) - or undefined
+  // always return the first one (keeps the order s-e-w-n) - or undefined
   // TODO: Maybe add a bit of intelligence if the end is within sight ...
   return neighbours[0];
 }
@@ -105,17 +135,18 @@ function nextNode(node) {
 function getAccessibleNeighbours(node) {
   const neighbours = [];
   // if we can move in a direction, that node is a neighbour
-  if (node.north) {
-    neighbours.push(getNode(node.x, node.y - 1));
+  // prefer order s-e-w-n
+  if (node.south) {
+    neighbours.push(getNode(node.x, node.y + 1));
   }
   if (node.east) {
     neighbours.push(getNode(node.x + 1, node.y));
   }
-  if (node.south) {
-    neighbours.push(getNode(node.x, node.y + 1));
-  }
   if (node.west) {
     neighbours.push(getNode(node.x - 1, node.y));
+  }
+  if (node.north) {
+    neighbours.push(getNode(node.x, node.y - 1));
   }
 
   return neighbours;
