@@ -11,6 +11,7 @@ main {
 #board {
   display: grid;
   grid-template-columns: repeat(var(--WIDTH), 32px);
+  grid-auto-rows: 32px;
   --border-color: #aaa;
   border: 2px solid var(--border-color);
 }
@@ -23,9 +24,9 @@ main {
   border: 1px solid #aaa;
   width: 100%;
   padding: 1.5em;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
 }
 
@@ -49,6 +50,7 @@ main {
 form#settings {
   display: grid;
   grid-template-columns: min-content max-content;
+  grid-auto-rows: max-content;
   gap: 8px;
   justify-items: start;
   color: rgb(99, 168, 99);
@@ -61,8 +63,8 @@ form#settings input {
   color: rgb(99, 168, 99);
 }
 
-form#settings input[type=checkbox]:not(:checked) {
-  opacity: .4;
+form#settings input[type="checkbox"]:not(:checked) {
+  opacity: 0.4;
 }
 
 .node {
@@ -85,15 +87,6 @@ form#settings input[type=checkbox]:not(:checked) {
   border-bottom-color: transparent;
 }
 
-/*
-.lastx {
-  border-right: 1px dotted var(--border-color);
-}
-.lasty {
-  border-bottom: 1px dotted var(--border-color);
-}
-*/
-
 .start {
   background-color: #1111a4;
 }
@@ -101,7 +94,6 @@ form#settings input[type=checkbox]:not(:checked) {
 .end {
   background-color: #a47111;
 }
-
 
 .visited {
   background-color: #488a48;
@@ -113,12 +105,4 @@ form#settings input[type=checkbox]:not(:checked) {
 
 .dead-end {
   background-color: #663636;
-}
-
-.snake {
-  background-color: #11a411;
-}
-
-.apple {
-  
 }

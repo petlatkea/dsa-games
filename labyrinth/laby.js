@@ -89,6 +89,9 @@ function makeMove() {
   } else {
     backtrack();
   }
+
+  showStack();
+  showTarget();
 }
 
 function backtrack() {
@@ -156,9 +159,22 @@ function getAccessibleNeighbours(node) {
 
 // *** INFO ***
 
+function showStack() {
+  const ul = document.querySelector("#stack");
+  const html = path.toReversed().map(node => `<li>{ ${String(node.x).padStart(2," ")}, ${String(node.y).padStart(2," ")} } ${getAccessibleNeighbours(node).length>2?"- fork -":""}</li>\n`).join("");
+  ul.innerHTML = html;
+  document.querySelector("#stacklength").textContent = path.length;
+}
+
+function showTarget() {
+  document.querySelector("#target").textContent = `{ ${String(mazeGoal.x).padStart(2," ")}, ${String(mazeGoal.y).padStart(2," ")} }`
+}
+
 // *** MAZE ***
 
 const nodes = [];
+let mazeStart = null;
+let mazeGoal = null;
 
 function createNodes() {
   nodes.splice(0, nodes.length);
@@ -252,8 +268,10 @@ function displayNodes() {
 }
 
 function markStartAndEnd() {
-  plot(0, 0, "start");
-  plot(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, "end");
+  mazeStart = nodes[0];
+  mazeGoal = nodes[nodes.length-1];
+  plot(mazeStart.x, mazeStart.y, "start");
+  plot(mazeGoal.x, mazeGoal.y, "end");
 }
 
 // *** GRAPHICS ***
