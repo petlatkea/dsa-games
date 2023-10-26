@@ -1,0 +1,31 @@
+body {
+  background-color: #444;
+  color: #8d8;
+}
+
+main {
+  display: flex;
+  gap: 1em;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(var(--WIDTH), 32px);
+  grid-auto-rows: 32px;
+  --border-color: #aaa;
+}
+
+.field {
+  border-left: 1px dotted var(--border-color);
+  border-top: 1px dotted var(--border-color);
+  width: 32px;
+  height: 32px;
+  background-image: url(images/basictiles.png);
+  background-size: 800% 1500%;
+  image-rendering: pixelated;
+}
+
+.grass {
+  background-position: 100% 0;
+  
+}
