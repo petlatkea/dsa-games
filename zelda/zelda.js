@@ -29,19 +29,19 @@ function start() {
 
 const level = [
   "TTT  f OT HHHHHH b      ",
-  "TTWWWWW  TH////H        ",
-  " PW...Wb  H////H        ",
-  "T W...W   HH/HHH f      ",
+  "TTWWWWW  TH////H  CCCC  ",
+  " PW...Wb  H////H  CnCC  ",
+  "T W...W   HH/HHH f *fR  ",
   "m WWDWWf    s PP        ",
   "    s Y  sssss          ",
-  "+--+s  T sssss Y        ",
-  "+ffsssssssssss  R       ",
-  "+ff+s    sssssYY       f",
-  "+--+s    sssss Y      ff",
-  "b   s                   ",
-  "sssss                   ",
-  "                        ",
-  "                        "
+  "+--+s  T sssss Y   ~~~  ",
+  "+ffsssssssssss  R  ~    ",
+  "+ff+s    sssssYY CC|CC f",
+  "+--+s    sssss Y   RY ff",
+  "b   s ~~  s        ~Y   ",
+  "sssss ~~~~I~~~~~~~~~ Y  ",
+  "      ~~~ s YYYY Y      ",
+  "          s       RY    "
 ];
 
 const fieldTypes = {
@@ -51,6 +51,7 @@ const fieldTypes = {
   '.corners': 17,
   's': 10,
   'scorners': 18,
+  '*': 18,
   'g': 64,  
   'G': 65,
   'f': 12,
@@ -74,7 +75,13 @@ const fieldTypes = {
   '-': 51,
   'm': 62,
   'M': 63,
-  'R': 58
+  'R': 58,
+  '~': 13,
+  'I': 16,
+  '|': 21,
+  'C': 15,
+  'n': 50,
+  '#': 49
 }
 
 const fields = [];
@@ -88,7 +95,7 @@ function createFields() {
    //   console.log('x: ' + x);
       let f = row.charAt(x);
       let subtype = undefined;
-      let corner = false;
+      let corner = "";
       const above = level[y-1]?.charAt(x);
       const below = level[y+1]?.charAt(x);
       const left = level[y].charAt(x-1);
@@ -106,31 +113,41 @@ function createFields() {
           f+="1";
         }
       } else 
-      // special case for flooring - DOESN'T QUITE WORK YET
+      // special case for flooring
       if(f=='.') {
+        subtype = "floor";
         if(f!=above && f!=left) {
           // top-left corner
-          subtype = "flooring";
-        } else if(f!=above && f!=right) {
+          corner += "tl";
+        } 
+        if(f!=above && f!=right) {
           // top-right corner
-          subtype = "flooring";
+          corner += "tr";
+        } 
+        if(f!=below && f!=left) {
+          corner += "bl";
         }
+        if(f!=below && f!=right) {
+          corner += "br";
+        }
+
       } else
       // special case for corners
       if(f==' ' || f=='s') {
+        subtype = "sand/grass";
         let opposite = f==' '?'s':' ';
         if(above==opposite && left==opposite) {
           // top-left corner
-          corner = "tl";
-        } else if(above==opposite && right==opposite) {
+          corner += "tl";
+        }  if(above==opposite && right==opposite) {
           // top-right corner
-          corner = "tr";
-        } else if(below==opposite && left==opposite) {
+          corner += "tr";
+        }  if(below==opposite && left==opposite) {
           // bottom-left corner
-          corner = "bl";
-        } else if(below==opposite && right==opposite) {
+          corner += "bl";
+        }  if(below==opposite && right==opposite) {
           // bottom-right corner
-          corner = "br";
+          corner += "br";
         } 
         // TODO: Double corners ... like endings of paths
       }
@@ -167,21 +184,25 @@ function displayFields() {
     if(m_field.corner) {
       v_field.classList.add("corner");
       v_field.classList.add(m_field.corner);
-      
-      // set op-w to opposite of this ... this might only be true for special cases
-      if(m_field.type == 11){
-        v_field.style.setProperty("--op-w", "-400%")
-      } else {
-        v_field.style.setProperty("--op-w", "-600%")
-      }
-    }
 
-    // DOESN'T QUITE WORK YET
-    if(m_field.subtype) {
-      v_field.classList.add(m_field.subtype);
+      // corner-tile used for before 
+      // - for sand and grass: same h*2, opposite w*2
+      // - for flooring: same w*2, h+1*2
+      if(m_field.subtype=="sand/grass") {
+        if(w==-200) {
+          v_field.style.setProperty("--corner-w","-600%");
+        } else if(w==-300) {
+          v_field.style.setProperty("--corner-w","-400%");
+        }
+        v_field.style.setProperty("--corner-h", h*2+"%");
+        v_field.classList.add("overlay");
+      } else {
+        v_field.style.setProperty("--corner-w", w*2+"%");
+        v_field.style.setProperty("--corner-h", (h-100)*2+"%");
+      }
+
     }
-    
-    
+   
   }
 
 

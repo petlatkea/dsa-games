@@ -48,30 +48,34 @@ main {
   background-image: url(images/basictiles.png);
   background-size: 1600% 3000%;
   /* set to opposite */
-  background-position: var(--op-w) -200%;
+  
 }
 
 .corner.tl::before {
   left: 0;
   top: 0;
+  background-position: var(--corner-w) var(--corner-h);
 }
 
 .corner.tr::before {
   right: 0;
   top: 0;
+  background-position: calc(var(--corner-w) - 100%) var(--corner-h);
 }
 
 .corner.bl::before {
   left: 0;
   bottom: 0;
+  background-position: var(--corner-w) calc(var(--corner-h) - 100%);
 }
 
 .corner.br::before {
   right: 0;
   bottom: 0;
+  background-position: calc(var(--corner-w) - 100%) calc(var(--corner-h) - 100%);
 }
 
-.corner::after {
+.corner.overlay::after {
   content: "";
   /* outline: 1px dashed yellow; */
   width: 100%;
