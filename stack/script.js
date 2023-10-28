@@ -25,6 +25,8 @@ function start() {
   setBoardVibility(visibility);
   document.querySelector("form#settings").visible.checked = visibility;
 
+  console.log("Solving Maze");
+
   // start loop
   completed = false;
   loop();

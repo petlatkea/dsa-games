@@ -5,7 +5,7 @@ const BOARD_WIDTH = 24;
 const BOARD_HEIGHT = 14;
 
 function start() {
-  console.log("Building Maze");
+  console.log("Building Tilemap");
 
   buildBoard();
 
@@ -90,7 +90,6 @@ function createFields() {
   let t = 0;
   for (let y = 0; y < BOARD_HEIGHT; y++) {
     const row = level[y];
-    console.log('');
     for (let x = 0; x < BOARD_WIDTH; x++) {
    //   console.log('x: ' + x);
       let f = row.charAt(x);
