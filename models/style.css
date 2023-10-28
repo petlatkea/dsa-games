@@ -1,0 +1,125 @@
+body {
+  background-color: #444;
+  color: #8d8;
+}
+
+main {
+  display: flex;
+  gap: 1em;
+}
+
+#board {
+  background-color: black;
+  position: relative;
+  width: 80vw;
+  height: 40vw;
+}
+
+#spaceship {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15vw;
+  aspect-ratio: 2.76 / 1;
+  /* border: 1px solid green; */
+  
+  background-image: url(images/spaceship.png);
+  background-size: 100%;
+}
+/*
+#spaceship::before {
+  content: "";
+  
+   border: 1px solid red; 
+  width: 40%;
+  aspect-ratio: 2.5 / 1;
+  position: absolute;
+  bottom: 30%;
+  left: -20%;
+  background-image: url(images/exhaust.png);
+  background-size: 100%;
+  
+} 
+*/
+.enemy {
+  position: absolute;
+  
+  top: 0;
+  left: 0;
+  /* TODO: Translate, rather than left top */
+  width: 8vw;
+  aspect-ratio: 2.1 / 1;
+
+  /* border: 1px dashed red; */
+  background-image: url(images/ufo.png);
+  background-size: 100%;
+}
+
+.shot {
+  position: absolute;
+
+  top: 10%;
+  left: 50%;
+  width: 15%;
+  aspect-ratio: 5  / 1 ;
+
+  border: 1px solid orange;
+
+  opacity: .85;
+
+  background-image: url(images/shot.png);
+  background-size: 100%;
+}
+
+.hide {
+  visibility: hidden;
+}
+
+#info {
+  flex-basis: 20vw;
+  
+  border: 1px solid #aaa;
+  width: 100%;
+  padding: 1.5em;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#info h2 {
+  margin: 0;
+}
+
+#info li {
+  white-space: pre;
+}
+
+#info ul:has(#spaceship_info) {
+  list-style-type: disclosure-closed;
+}
+
+#info #queue {
+  max-height: 16em;
+  overflow: hidden;
+}
+
+form#settings {
+  display: grid;
+  grid-template-columns: min-content max-content;
+  gap: 8px;
+  justify-items: start;
+  color: rgb(99, 168, 99);
+}
+
+form#settings input {
+  margin: 0;
+  max-width: 3em;
+  background-color: #444;
+  color: rgb(99, 168, 99);
+}
+
+form#settings input[type=checkbox]:not(:checked) {
+  opacity: .4;
+}
+
