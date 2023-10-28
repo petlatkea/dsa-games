@@ -13,6 +13,7 @@ main {
   grid-template-columns: repeat(var(--WIDTH), 32px);
   grid-auto-rows: 32px;
   --border-color: #aaa;
+  background-color: #6daa2c;
 }
 
 .field {
@@ -23,6 +24,75 @@ main {
   background-image: url(images/basictiles.png);
   background-size: 800% 1500%;
   image-rendering: pixelated;
+  position: relative;
+}
+
+.field {
+ 
+  /*
+    const w = (m_field.type%8) * -100;
+    const h = Math.floor(m_field.type/8) * -100;
+
+    v_field.style.backgroundPosition = `${w}% ${h}%`;
+  */
+  background-position: var(--w) var(--h);
+}
+
+.corner::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  position: absolute;
+
+  /* outline: 2px solid cyan; */
+  background-image: url(images/basictiles.png);
+  background-size: 1600% 3000%;
+  /* set to opposite */
+  background-position: var(--op-w) -200%;
+}
+
+.corner.tl::before {
+  left: 0;
+  top: 0;
+}
+
+.corner.tr::before {
+  right: 0;
+  top: 0;
+}
+
+.corner.bl::before {
+  left: 0;
+  bottom: 0;
+}
+
+.corner.br::before {
+  right: 0;
+  bottom: 0;
+}
+
+.corner::after {
+  content: "";
+  /* outline: 1px dashed yellow; */
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url(images/basictiles.png);
+  background-size: 800% 1500%;
+  background-position: var(--w) -200%;
+}
+
+.flooring::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  outline: 2px solid cyan;
+  background-image: url(images/basictiles.png);
+  background-size: 1600% 3000%;
+  background-position: -200% -400%;
 }
 
 .grass {
