@@ -75,31 +75,47 @@ main {
   background-position: calc(var(--corner-w) - 100%) calc(var(--corner-h) - 100%);
 }
 
-.corner.overlay::after {
+.overlay::after {
   content: "";
-  /* outline: 1px dashed yellow; */
   width: 100%;
   height: 100%;
-  position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
+  position: absolute;
+  /* outline: 1px solid red; */
   background-image: url(images/basictiles.png);
   background-size: 800% 1500%;
+}
+
+.water.overlay::after {
+  background-position: var(--w) calc(var(--h) - 300%);
+}
+
+.corner.overlay::after {
   background-position: var(--w) -200%;
 }
-
-.flooring::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  position: absolute;
-  outline: 2px solid cyan;
-  background-image: url(images/basictiles.png);
-  background-size: 1600% 3000%;
+/* TODO: Figure out how to handle corners AND borders */
+.border.northwest::after {
+  background-position: -000% -300%;
+}
+.border.north::after {
+  background-position: -100% -300%;
+}
+.border.northeast::after {
+  background-position: -200% -300%;
+}
+.border.east::after {
   background-position: -200% -400%;
 }
-
-.grass {
-  background-position: 100% 0;
-  
+.border.west::after {
+  background-position: -000% -400%;
+}
+.border.southwest::after {
+  background-position: -000% -500%;
+}
+.border.south::after {
+  background-position: -100% -500%;
+}
+.border.southeast::after {
+  background-position: -200% -500%;
 }

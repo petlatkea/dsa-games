@@ -28,20 +28,20 @@ function start() {
 // *** BOARD / PLAYFIELD ***
 
 const level = [
-  "TTT  f OT HHHHHH b      ",
-  "TTWWWWW  TH////H  CCCC  ",
-  " PW...Wb  H////H  CnCC  ",
-  "T W...W   HH/HHH f *fR  ",
+  "TTT  f OT HHHHHH b    ff",
+  "TTWWWWW  TH////H  CCCCff",
+  " PW...Wb  H////H  CnCCf ",
+  "T W...W b HH/HHH f *fR  ",
   "m WWDWWf    s PP        ",
   "    s Y  sssss          ",
-  "+--+s  T sssss Y   ~~~  ",
+  "+--+s  T sssss Y   ~~~~~",
   "+ffsssssssssss  R  ~    ",
-  "+ff+s    sssssYY CC|CC f",
-  "+--+s    sssss Y   RY ff",
-  "b   s ~~  s        ~Y   ",
-  "sssss ~~~~I~~~~~~~~~ Y  ",
-  "      ~~~ s YYYY Y      ",
-  "          s       RY    "
+  "+ff+s    sssssYY CC|CC b",
+  "+--+s    sssss Y   ~Y bb",
+  "b   s ~~  s        ~Y  f",
+  "sssss ~~~~I~~~~~~~~~ Y b",
+  "      ~~~ s YYYY Y    b ",
+  "          s  YYY  RY  C "
 ];
 
 const fieldTypes = {
@@ -150,6 +150,10 @@ function createFields() {
           corner += "br";
         } 
         // TODO: Double corners ... like endings of paths
+      } else 
+      // special case for water
+      if(f=='~' || f=='|') {
+        subtype = "water";
       }
 
       const field = {
@@ -158,11 +162,38 @@ function createFields() {
         type: fieldTypes[f],
         subtype: subtype,
         corner: corner,
+        border: null
       };
 
       fields.push(field);
     }
   }
+
+  // Fix borders
+  for(let i=0; i < fields.length; i++) {
+    const field = fields[i];
+    if(field.subtype=="water" && field.type != 21) {
+      // neighbours
+      const north = fields[(field.y-1)*BOARD_WIDTH + field.x];
+      const south = fields[(field.y+1)*BOARD_WIDTH + field.x];
+      const east = field.x<BOARD_WIDTH?fields[field.y*BOARD_WIDTH + field.x+1]:undefined;
+      const west = field.x>0?fields[field.y*BOARD_WIDTH + field.x-1]:undefined;
+
+      if(north && north.subtype != "water") {
+        north.border = "south" + (north.border ?? "");
+      }
+      if(south && south.subtype != "water") {
+        south.border = "north" + (south.border ?? "");
+      }
+      if(west && west.subtype != "water") {
+        west.border = (west.border ?? "") + "east";
+      }
+      if(east && east.subtype != "water") {
+        east.border = (east.border ?? "") + "west";
+      }
+    }
+  }
+  
 }
 
 function displayFields() {
@@ -200,7 +231,17 @@ function displayFields() {
         v_field.style.setProperty("--corner-w", w*2+"%");
         v_field.style.setProperty("--corner-h", (h-100)*2+"%");
       }
-
+    }
+    if(m_field.subtype=="water") {
+      if(m_field.type != 21) {
+        v_field.classList.add("overlay");
+        v_field.classList.add("water");
+      }
+    }
+    if(m_field.border && m_field.type!=16) { // Special case for bridges ...
+      v_field.classList.add("overlay");
+      v_field.classList.add("border");
+      v_field.classList.add(m_field.border);
     }
    
   }
