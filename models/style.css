@@ -13,6 +13,7 @@ main {
   position: relative;
   width: 80vw;
   height: 40vw;
+  overflow: hidden;
 }
 
 #spaceship {
@@ -53,6 +54,44 @@ main {
   /* border: 1px dashed red; */
   background-image: url(images/ufo.png);
   background-size: 100%;
+}
+
+.enemy::before,
+.enemy::after {
+  content: "";
+  position: absolute;
+  height: 0.4vw;
+  top: -1vw;
+  left: 2vw;
+}
+
+.enemy::before {
+  width: 4vw;
+  border: 1px solid grey;
+}
+
+.enemy::after {
+  margin: 1px;
+  width: calc( var(--health) * 4vw / 100 );
+  background-color: green;
+}
+
+.explode {
+  animation: explode 1s ease-in 1;
+}
+
+@keyframes explode {
+  0% {
+    rotate: 0deg;
+    scale: 1;
+    opacity: 1;
+  }
+
+  100% {
+    rotate: -720deg;
+    scale: 0;
+    opacity: 0;
+  }
 }
 
 .shot {

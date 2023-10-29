@@ -120,6 +120,20 @@ function loop() {
     spaceship.firing = false;
   }
 
+  // handle collissions
+  for(const shot of shots) {
+    // check if each shot collides with an enemy somehow
+    for(const enemy of enemies) {
+      if(testCollision(shot,enemy)) {
+        // damage enemy
+        damageEnemy(enemy, shot);
+        // remove shot
+        removeShot(shot);
+      }
+    }
+  }
+
+
   // update display
   displaySpaceShip();
   displayEnemies();
@@ -146,6 +160,13 @@ function clamp(value,min,max) {
     return max;
   }
   return value;
+}
+
+function testCollision(shot,enemy) {
+  if(shot.x >= enemy.x-2 && shot.x <= enemy.x+7 
+  &&  shot.y >= enemy.y && shot.y <= enemy.y+3 ) {
+    return true;
+  }
 }
 
 // *** ENEMIES ***
@@ -175,10 +196,33 @@ function moveEnemies(delta) {
   for(const enemy of enemies) {
     enemy.x-=enemy.speed*delta;
     if(enemy.x < -10) {
-      // TODO: If enemy smaller than outside, restart enemy, loose point, etc
+      // If enemy gets past border, restart it, and spawn another
+      // TODO:  loose point, etc
       restartEnemy(enemy);
+      // spawn another enemy
+      createEnemy();
     }
   }
+}
+
+function damageEnemy(enemy,shot) {
+  enemy.health-=shot.damage;
+  // If health < 0, die
+  if(enemy.health <= 0) {
+    killEnemy(enemy);
+  }
+}
+
+function killEnemy(enemy) {
+  // remove enemy from list immediately
+  enemies.splice(enemies.indexOf(enemy), 1);
+  // then add explode-animation
+  enemy.element.classList.add("explode");
+  enemy.element.style.transformOrigin = `${enemy.x+4}vw ${enemy.y+1}vw`;
+  enemy.element.addEventListener("animationend", () => {
+    // finally remove element from DOM
+    enemy.element.remove();
+  });
 }
 
 // *** SHOTS ***
@@ -188,7 +232,7 @@ function createShot(spaceship) {
     x: spaceship.x+10,
     y: spaceship.y+4,
     speed: 40,
-    damage: 10,
+    damage: 20,
     element: document.createElement("div")
   }
 
@@ -243,7 +287,7 @@ function changeSpeed(event) {
 
 function showEnemiesInfo() {
   const ul = document.querySelector("#enemies_info");
-  const html = enemies.map(item => `<li>{ ${String(Math.floor(item.x)).padStart(2," ")}, ${String(Math.floor(item.y)).padStart(2," ")} }</li>\n`).join("");
+  const html = enemies.map(item => `<li>{ ${String(Math.floor(item.x)).padStart(2," ")}, ${String(Math.floor(item.y)).padStart(2," ")}  h: ${item.health}}</li>\n`).join("");
   
   ul.innerHTML = html;
 
@@ -288,6 +332,7 @@ function displaySpaceShip() {
 function displayEnemies() {
   for(const enemy of enemies) {
     enemy.element.style.transform = `translate( ${enemy.x}vw, ${enemy.y}vw)`;
+    enemy.element.style.setProperty("--health", enemy.health);
   }
 }
 
