@@ -108,15 +108,17 @@ function loop() {
   spaceship.y = clamp(spaceship.y,0,34);
   
   moveEnemies(delta);
+  moveShots(delta);
 
   // update display
   displaySpaceShip();
   displayEnemies();
+  displayShots();
 
   // update info
   showSpaceShipInfo();
   showEnemiesInfo();
-
+  showShotsInfo();
 
 
   if (!dead) {
@@ -137,6 +139,7 @@ function clamp(value,min,max) {
 }
 
 // *** ENEMIES ***
+
 function createEnemy() {
   const enemy = {
     x: 80,
@@ -148,7 +151,6 @@ function createEnemy() {
   enemy.element = document.createElement("div");
   enemy.element.classList.add("enemy");
   document.querySelector("#enemies").appendChild(enemy.element);
-
 
   enemies.push(enemy);
 }
@@ -169,7 +171,38 @@ function moveEnemies(delta) {
   }
 }
 
+// *** SHOTS ***
 
+function createShot(spaceship) {
+  const shot = {
+    x: spaceship.x+10,
+    y: spaceship.y+4,
+    speed: 20,
+    damage: 10,
+    element: document.createElement("div")
+  }
+
+  shot.element.classList.add("shot");
+  document.querySelector("#shots").appendChild(shot.element);
+  
+  shots.push(shot);
+}
+
+function removeShot(shot) {
+  // remove from array
+  shots.splice(shots.indexOf(shot),1);
+  // remove from document
+  shot.element.remove();
+}
+
+function moveShots(delta) {
+  for(const shot of shots) {
+    shot.x+=shot.speed*delta;
+    if(shot.x > 74) {
+      removeShot(shot);
+    }
+  }
+}
 
 // *** SETTINGS ***
 
@@ -207,6 +240,15 @@ function showEnemiesInfo() {
   document.querySelector("#enemies_length").textContent = enemies.length;
 }
 
+function showShotsInfo() {
+  const ul = document.querySelector("#shots_info");
+  const html = shots.map(item => `<li>{ ${String(Math.floor(item.x)).padStart(2," ")}, ${String(Math.floor(item.y)).padStart(2," ")} }</li>\n`).join("");
+  
+  ul.innerHTML = html;
+
+  //document.querySelector("#enemies_length").textContent = enemies.length;
+}
+
 function showSpaceShipInfo() {
   document.querySelector("#spaceship_info").textContent = `{ ${String(Math.floor(spaceship.x)).padStart(2," ")}, ${String(Math.floor(spaceship.y)).padStart(2," ")} }`;
   
@@ -224,6 +266,7 @@ const spaceship = {
 
 const enemies = []
 
+const shots = []
 
 
 // *** GRAPHICS ***
@@ -235,5 +278,11 @@ function displaySpaceShip() {
 function displayEnemies() {
   for(const enemy of enemies) {
     enemy.element.style.transform = `translate( ${enemy.x}vw, ${enemy.y}vw)`;
+  }
+}
+
+function displayShots() {
+  for(const shot of shots) {
+    shot.element.style.transform = `translate( ${shot.x}vw, ${shot.y}vw)`;
   }
 }

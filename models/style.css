@@ -58,12 +58,12 @@ main {
 .shot {
   position: absolute;
 
-  top: 10%;
-  left: 50%;
-  width: 15%;
+  top: 0;
+  left: 0;
+  width: 8%;
   aspect-ratio: 5  / 1 ;
 
-  border: 1px solid orange;
+  /* border: 1px solid orange; */
 
   opacity: .85;
 
