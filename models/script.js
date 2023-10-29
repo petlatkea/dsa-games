@@ -3,8 +3,10 @@ window.addEventListener("load", start);
 
 function start() {
   console.log("Creating objects");
-
-
+  createEnemy();
+  createEnemy();
+  createEnemy();
+  spaceship.element = document.querySelector("#spaceship");
 
   // register key-presses
   document.addEventListener("keydown", keypress);
@@ -12,13 +14,9 @@ function start() {
 
   registerEventsForSettings();
 
-  //  plot(40,40,"snake");
-//  drawSnake();
   // start loop
   dead = false;
   loop();
-  // generate apple
-//  generateApple();
 }
 
 // *** KEYBOARD HANDLING ***
@@ -93,16 +91,16 @@ function loop() {
   const delta = (now - (last || now)) / 1000;
   last = now;
 
-  // handle movement
+  // handle movement of spaceship
   if(keys.down) {
-    spaceship.y+=speed*delta;
+    spaceship.y+=spaceship.speed*delta;
   } else if(keys.up) {
-    spaceship.y-=speed*delta;
+    spaceship.y-=spaceship.speed*delta;
   }
   if(keys.left) {
-    spaceship.x-=speed*delta;
+    spaceship.x-=spaceship.speed*delta;
   } else if(keys.right) {
-    spaceship.x+=speed*delta;
+    spaceship.x+=spaceship.speed*delta;
   }
 
   // clamp movement
@@ -138,37 +136,40 @@ function clamp(value,min,max) {
   return value;
 }
 
-// *** MOVEMENT ***
+// *** ENEMIES ***
+function createEnemy() {
+  const enemy = {
+    x: 80,
+    y: Math.random()*34,
+    speed: 8 + Math.random()*4,
+    health: 100
+  }
+  
+  enemy.element = document.createElement("div");
+  enemy.element.classList.add("enemy");
+  document.querySelector("#enemies").appendChild(enemy.element);
 
-let speed = 20;
-let enemySpeed = 10;
+
+  enemies.push(enemy);
+}
+
+function restartEnemy(enemy) {
+  enemy.x = 80;
+  enemy.y = Math.random()*34;
+  enemy.speed = 8 + Math.random()*4;
+}
 
 function moveEnemies(delta) {
   for(const enemy of enemies) {
-    enemy.x-=enemySpeed*delta;
-    if(enemy.x < 10) {
+    enemy.x-=enemy.speed*delta;
+    if(enemy.x < -10) {
       // TODO: If enemy smaller than outside, restart enemy, loose point, etc
-
+      restartEnemy(enemy);
     }
   }
 }
 
-const direction = {
-  left: { x: -1, y: 0 },
-  right: { x: 1, y: 0 },
-  up: { x: 0, y: -1 },
-  down: { x: 0, y: 1 },
-};
 
-const move = {
-  direction: direction.left,
-  x: {
-    offset: 0,
-  },
-  y: {
-    offset: 0,
-  },
-};
 
 // *** SETTINGS ***
 
@@ -216,35 +217,23 @@ function showSpaceShipInfo() {
 const spaceship = {
   x: 0,
   y: 0,
+  speed: 20,
   energy: 100,
   firing: false
 }
 
-const enemies = [
-  {
-    x: 60,
-    y: 10,
-    health: 100
-  },
-  {
-    x: 70,
-    y: 20,
-    health: 100
-  }
-]
+const enemies = []
 
 
 
 // *** GRAPHICS ***
 
 function displaySpaceShip() {
-  const element = document.querySelector("#spaceship");
-  element.style.transform = `translate( ${spaceship.x}vw, ${spaceship.y}vw)`;
+  spaceship.element.style.transform = `translate( ${spaceship.x}vw, ${spaceship.y}vw)`;
 }
 
 function displayEnemies() {
-  const elements = document.querySelectorAll(".enemy");
-  for(let i=0; i < enemies.length; i++) {
-    elements[i].style.transform = `translate( ${enemies[i].x}vw, ${enemies[i].y}vw)`;
+  for(const enemy of enemies) {
+    enemy.element.style.transform = `translate( ${enemy.x}vw, ${enemy.y}vw)`;
   }
 }
