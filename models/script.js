@@ -110,6 +110,16 @@ function loop() {
   moveEnemies(delta);
   moveShots(delta);
 
+  // handle shooting
+  if(keys.space && !spaceship.firing) {
+    spaceship.firing = true;
+    createShot(spaceship);
+  }
+  // wait for fire-button to be released before allowing to fire again
+  if(spaceship.firing && !keys.space) {
+    spaceship.firing = false;
+  }
+
   // update display
   displaySpaceShip();
   displayEnemies();
@@ -157,7 +167,7 @@ function createEnemy() {
 
 function restartEnemy(enemy) {
   enemy.x = 80;
-  enemy.y = Math.random()*34;
+  enemy.y = Math.random()*34 + 4; // enemies at the very top, cannot be hit by shots
   enemy.speed = 8 + Math.random()*4;
 }
 
@@ -177,7 +187,7 @@ function createShot(spaceship) {
   const shot = {
     x: spaceship.x+10,
     y: spaceship.y+4,
-    speed: 20,
+    speed: 40,
     damage: 10,
     element: document.createElement("div")
   }
