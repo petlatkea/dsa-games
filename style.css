@@ -1,0 +1,24 @@
+body {
+  background-color: #444;
+  color: #8d8;
+}
+
+a {
+  color: #aea;
+  font-weight: bold;
+}
+
+a:visited {
+  color: #4a4;
+}
+
+dl {
+  border: 1px solid #aaa;
+  padding: 1em;
+  font-size: 110%;
+}
+
+dt {
+  font-family: "Courier New", Courier, monospace;
+  margin-top: .5em;
+}
