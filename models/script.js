@@ -82,13 +82,14 @@ function keyrelease(event) {
 
 // *** GAMELOOP ***
 
+let throttle = 10;
 let dead = false;
 let last = 0;
 
 function loop() {
   // calculate delta
   const now = Date.now();
-  const delta = (now - (last || now)) / 1000;
+  const delta = (now - (last || now)) / 1000 * throttle / 10;
   last = now;
 
   // handle movement of spaceship
@@ -171,6 +172,8 @@ function testCollision(shot,enemy) {
 
 // *** ENEMIES ***
 
+const MAX_ENEMIES = 10;
+
 function createEnemy() {
   const enemy = {
     x: 80,
@@ -196,11 +199,13 @@ function moveEnemies(delta) {
   for(const enemy of enemies) {
     enemy.x-=enemy.speed*delta;
     if(enemy.x < -10) {
-      // If enemy gets past border, restart it, and spawn another
+      // If enemy gets past border, restart it, and maybe spawn another
       // TODO:  loose point, etc
       restartEnemy(enemy);
-      // spawn another enemy
-      createEnemy();
+      // spawn another enemy - if we are below max, and we roll the dice 1/3
+      if(enemies.length < MAX_ENEMIES && Math.random() < .3) {
+        createEnemy();
+      }
     }
   }
 }
@@ -279,7 +284,7 @@ function toggleBoardVisibility(event) {
 
 function changeSpeed(event) {
   const _speed = event.target.valueAsNumber;
-  speed = _speed;
+  throttle = _speed;
 }
 
 
